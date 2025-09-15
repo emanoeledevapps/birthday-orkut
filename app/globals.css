@@ -3,5 +3,8 @@
 @theme {
   --color-background: #d9e6f7;
   --color-primary: #ffc0cb;
-  --color-secondary: #00008b;
+
+  --color-blue-primary: #5078b2;
+
+  --color-text-secondary: #5a5a5a;
 }
