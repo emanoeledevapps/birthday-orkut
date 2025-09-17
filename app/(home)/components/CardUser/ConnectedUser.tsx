@@ -1,14 +1,14 @@
-import { UserProps } from "@/types/user";
+import { User } from "@/app/generated/prisma";
 
 interface Props {
-  user: UserProps;
+  user: User;
 }
-export function ConnectedUser({}: Props) {
+export function ConnectedUser({ user }: Props) {
   return (
     <>
       <div className="w-32 flex flex-col p-3 items-center justify-center">
         <div className="flex w-20 h-20 rounded-full bg-green-500" />
-        <p>João da Silva</p>
+        <p className="text-center text-sm">{user.name}</p>
       </div>
 
       <div className="flex flex-col">

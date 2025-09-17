@@ -1,14 +1,51 @@
 "use server"
 
 import prisma from "@/lib/prisma";
+import { User } from "./generated/prisma";
 
 interface CheckUserExistsProps {
-  email: string
+  id: string;
 }
-export async function checkUserExists({ email }: CheckUserExistsProps): Promise<boolean> {
+export async function checkUserExists({ id }: CheckUserExistsProps): Promise<boolean> {
   const response = await prisma.user.count({
-    where: { email }
+    where: { id }
   })
 
   return response > 0
+}
+
+interface CreateUserProps {
+  id: string;
+  name: string;
+}
+interface ReturnCreateUserProps {
+  success: boolean;
+  user?: User;
+  message?: string;
+}
+export async function createUser({ id, name }: CreateUserProps): Promise<ReturnCreateUserProps> {
+  try {
+    const userExists = await prisma.user.findFirst({ where: { id } });
+    if (userExists) {
+      return {
+        success: false,
+        message: "user-exists"
+      }
+    }
+
+    const response = await prisma.user.create({
+      data: {
+        id,
+        name
+      }
+    })
+
+    return {
+      success: true,
+      user: response
+    }
+  } catch (e) {
+    console.log(e)
+    return { success: false }
+  }
 }
