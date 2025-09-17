@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { User } from "./generated/prisma";
+import { Post, User } from "./generated/prisma";
 
 interface CheckUserExistsProps {
   id: string;
@@ -47,5 +47,35 @@ export async function createUser({ id, name }: CreateUserProps): Promise<ReturnC
   } catch (e) {
     console.log(e)
     return { success: false }
+  }
+}
+
+interface CreatePostProps {
+  userId: string;
+  message: string;
+}
+interface ReturnCreatePostProps {
+  success: boolean;
+  post?: Post;
+  message?: string;
+}
+export async function createPost({ message, userId }: CreatePostProps): Promise<ReturnCreatePostProps> {
+  try {
+    const response = await prisma.post.create({
+      data: {
+        message,
+        userId
+      }
+    });
+
+    return {
+      success: true,
+      post: response
+    }
+  } catch (e) {
+    console.log(e);
+    return {
+      success: false,
+    }
   }
 }
