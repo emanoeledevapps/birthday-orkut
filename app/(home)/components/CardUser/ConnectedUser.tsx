@@ -1,4 +1,4 @@
-import { UserProps } from "@/app/_types/user";
+import { UserProps } from "@/types/user";
 
 interface Props {
   user: UserProps;

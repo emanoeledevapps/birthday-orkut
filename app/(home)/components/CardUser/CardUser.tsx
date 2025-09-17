@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UserProps } from "@/app/_types/user";
+import { UserProps } from "@/types/user";
 import { ConnectedUser } from "./ConnectedUser";
 import { ConnectUser } from "./ConnectUser";
 
