@@ -103,6 +103,9 @@ export async function getPosts({ page }: GetPostsProps): Promise<ReturnGetPostPr
       take: limitPerPage,
       orderBy: {
         createdAt: 'desc'
+      },
+      include: {
+        user: true
       }
     });
 
