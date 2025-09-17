@@ -79,3 +79,55 @@ export async function createPost({ message, userId }: CreatePostProps): Promise<
     }
   }
 }
+
+interface GetPostsProps {
+  page: number;
+}
+interface ReturnGetPostProps {
+  success: boolean;
+  posts: Post[];
+  message?: string;
+  meta: {
+    current_page: number;
+    total_pages: number;
+    total_posts: number;
+  }
+}
+export async function getPosts({ page }: GetPostsProps): Promise<ReturnGetPostProps> {
+  const limitPerPage = 10;
+  const skip = (page - 1) * limitPerPage;
+
+  try {
+    const posts = await prisma.post.findMany({
+      skip,
+      take: limitPerPage,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    const totalPosts = await prisma.post.count();
+    const totalPages = Math.ceil(totalPosts / limitPerPage);
+
+    return {
+      success: true,
+      posts,
+      meta: {
+        current_page: page,
+        total_pages: totalPages,
+        total_posts: totalPosts
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    return {
+      success: false,
+      posts: [],
+      meta: {
+        current_page: page,
+        total_pages: 0,
+        total_posts: 0
+      }
+    }
+  }
+}
