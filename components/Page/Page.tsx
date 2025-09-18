@@ -9,7 +9,7 @@ export function Page({ children }: Props) {
   return (
     <div className="flex flex-col w-screen h-[100dvh]">
       <Header />
-      <main className="flex flex-col container mx-auto flex-1 p-5">
+      <main className="flex flex-col container mx-auto flex-1 p-5 gap-5">
         {children}
       </main>
       <Footer />

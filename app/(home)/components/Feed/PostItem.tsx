@@ -6,7 +6,8 @@ interface Props {
 
 export function PostItem({ post }: Props) {
   return (
-    <div className="flex flex-col w-full p-5 bg-white">
+    <div className="flex flex-col w-full p-5 bg-white rounded-sm">
+      <div className=""></div>
       <p className="text-black">{post.message}</p>
     </div>
   );
