@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ConnectedUser } from "./ConnectedUser";
-import { ConnectUser } from "./ConnectUser";
+import { DisconnectedUser } from "./DisconnectedUser";
 import { User } from "@/app/generated/prisma";
 
 export function CardUser() {
@@ -24,7 +24,11 @@ export function CardUser() {
 
   return (
     <div className="flex flex-row gap-5 p-3 bg-white rounded-sm">
-      {user ? <ConnectedUser user={user} /> : <ConnectUser setUser={setUser} />}
+      {user ? (
+        <ConnectedUser user={user} />
+      ) : (
+        <DisconnectedUser setUser={setUser} />
+      )}
     </div>
   );
 }

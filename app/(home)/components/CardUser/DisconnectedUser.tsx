@@ -20,7 +20,8 @@ import { User } from "@/app/generated/prisma";
 interface Props {
   setUser: (user: User) => void;
 }
-export function ConnectUser({ setUser }: Props) {
+export function DisconnectedUser({ setUser }: Props) {
+  const personName = process.env.NEXT_PUBLIC_BIRTHDAY_PERSON;
   const { randomUUID } = new ShortUniqueId({ length: 8 });
   const accessCode = useMemo(() => randomUUID().toUpperCase(), []);
 
@@ -45,9 +46,18 @@ export function ConnectUser({ setUser }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger className="h-10 px-10 rounded-sm text-white font-semibold bg-blue-primary">
-        Conectar
-      </DialogTrigger>
+      <div className="flex flex-col gap-1">
+        <p className="font-semibold text-blue-primary">
+          Você não está conectado!
+        </p>
+        <p className="text-text-secondary text-sm">
+          Conecte-se para deixar seu recado para {personName}, postar suas fotos
+          e comemorar juntos esse momento
+        </p>
+        <DialogTrigger className="h-10 px-10 rounded-sm text-white font-semibold bg-blue-primary mt-5">
+          Conectar
+        </DialogTrigger>
+      </div>
 
       <DialogContent>
         <DialogHeader>
@@ -57,10 +67,16 @@ export function ConnectUser({ setUser }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-5">
           <div className="grid flex-1">
             <Label className="text-text-secondary">Seu código de acesso</Label>
-            <p className="font-bold text-2xl text-blue-primary">{accessCode}</p>
+            <p className="font-bold text-3xl text-blue-primary">{accessCode}</p>
+
+            <p className="text-xs">
+              Esse código de acesso será copiada para sua área de transferência
+              caso precise, mas não se preocupe, você ficará conectado nesse
+              dispositivo
+            </p>
           </div>
 
           <div className="grid flex-1 gap-2">
