@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { Post as PostProps } from "@/app/generated/prisma";
 import { getPosts } from "@/app/actions";
 import { Post } from "@/components/Post/Post";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export function Feed() {
   const [posts, setPosts] = useState<PostProps[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const listEnd = useRef(null);
 
@@ -28,6 +29,7 @@ export function Feed() {
       // TODO: alert error
     }
     setLoading(false);
+    setLoadingMore(false);
   }
 
   useEffect(() => {
@@ -58,6 +60,7 @@ export function Feed() {
   useEffect(() => {
     if (page === 1) return;
     fetchPosts(page);
+    setLoadingMore(true);
   }, [page]);
 
   if (loading && posts.length === 0) {
@@ -81,6 +84,14 @@ export function Feed() {
         <Post post={item} key={item.id} />
       ))}
 
+      {loadingMore && (
+        <div className="flex w-full justify-center">
+          <AiOutlineLoading3Quarters
+            size={30}
+            className="text-blue-primary animate-spin mt-5 mb-1"
+          />
+        </div>
+      )}
       <div ref={listEnd} />
     </div>
   );
