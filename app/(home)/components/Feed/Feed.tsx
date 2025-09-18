@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { Post } from "@/app/generated/prisma";
+import { Post as PostProps } from "@/app/generated/prisma";
 import { getPosts } from "@/app/actions";
-import { PostItem } from "./PostItem";
+import { Post } from "@/components/Post/Post";
 
 export function Feed() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostProps[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -36,7 +36,7 @@ export function Feed() {
   return (
     <div className="flex flex-col gap-3">
       {posts.map((item) => (
-        <PostItem post={item} key={item.id} />
+        <Post post={item} key={item.id} />
       ))}
     </div>
   );

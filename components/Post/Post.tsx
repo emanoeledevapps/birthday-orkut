@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Post } from "@/app/generated/prisma";
+import { Post as PostProps } from "@/app/generated/prisma";
 import { Avatar } from "@/components/Avatar/Avatar";
 import { useTimeSince } from "@/hooks/useTimeSince";
 
 interface Props {
-  post: Post;
+  post: PostProps;
 }
 
-export function PostItem({ post }: Props) {
+export function Post({ post }: Props) {
   const { formatted } = useTimeSince(post.createdAt);
 
   return (
