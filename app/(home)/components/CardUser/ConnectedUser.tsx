@@ -10,6 +10,26 @@ import { Avatar } from "@/components/Avatar/Avatar";
 //import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GrGallery } from "react-icons/gr";
+import { AddPhoto, PhotoProps } from "@/components/AddPhoto/AddPhoto";
+import Image from "next/image";
+
+interface PhotoItemProps {
+  photo: PhotoProps;
+}
+function PhotoItem({ photo }: PhotoItemProps) {
+  return (
+    <div className="flex">
+      <Image
+        width={50}
+        height={50}
+        src={photo.preview}
+        alt="Imagem para upload"
+        className="w-20 h-20 object-cover rounded-sm"
+      />
+    </div>
+  );
+}
 
 interface Props {
   user: User;
@@ -18,6 +38,8 @@ interface Props {
 export function ConnectedUser({ user, createdPost }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [showAddImages, setShowAddImages] = useState(false);
+  const [photosToUpload, setPhotosToUpload] = useState<PhotoProps[]>([]);
 
   async function handlePost() {
     setIsLoading(true);
@@ -34,6 +56,10 @@ export function ConnectedUser({ user, createdPost }: Props) {
       toast.error("Algo deu errado, tente novamente!");
     }
     setIsLoading(false);
+  }
+
+  function handleAddPhotoToUpload(photo: PhotoProps) {
+    setPhotosToUpload((prev) => [...prev, photo]);
   }
 
   return (
@@ -73,6 +99,23 @@ export function ConnectedUser({ user, createdPost }: Props) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
+
+        <button onClick={() => setShowAddImages(true)} className="mt-3">
+          <GrGallery className="text-blue-primary" size={25} />
+        </button>
+
+        {showAddImages && (
+          <div className="flex gap-3 mt-3">
+            {photosToUpload.map((item) => (
+              <PhotoItem key={item.preview} photo={item} />
+            ))}
+            <AddPhoto onChangePhoto={handleAddPhotoToUpload}>
+              <div className="w-20 h-20 rounded-sm bg-gray-400 flex flex-col items-center justify-center">
+                <p className="text-xs text-center">Toque para adicionar</p>
+              </div>
+            </AddPhoto>
+          </div>
+        )}
         <div className="flex w-full justify-end mt-3">
           <button
             className="h-10 w-24 flex items-center justify-center rounded-sm text-white bg-blue-primary font-semibold hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
