@@ -1,22 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { createPost } from "@/app/actions";
-import { User } from "@/app/generated/prisma";
+import { Post, User } from "@/app/generated/prisma";
 import { Avatar } from "@/components/Avatar/Avatar";
 //import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface Props {
   user: User;
+  createdPost: (post: Post) => void;
 }
-export function ConnectedUser({ user }: Props) {
-  const router = useRouter();
+export function ConnectedUser({ user, createdPost }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -29,8 +28,8 @@ export function ConnectedUser({ user }: Props) {
 
     if (response.success) {
       setMessage("");
-      router.refresh();
       toast.success("Depoimento publicado com sucesso!");
+      if (response.post) createdPost(response.post);
     } else {
       toast.error("Algo deu errado, tente novamente!");
     }

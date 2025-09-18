@@ -65,6 +65,9 @@ export async function createPost({ message, userId }: CreatePostProps): Promise<
       data: {
         message,
         userId
+      },
+      include: {
+        user: true
       }
     });
 

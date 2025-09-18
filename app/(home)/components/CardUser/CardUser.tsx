@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react";
 import { ConnectedUser } from "./ConnectedUser";
 import { DisconnectedUser } from "./DisconnectedUser";
-import { User } from "@/app/generated/prisma";
+import { Post as PostProps, User } from "@/app/generated/prisma";
+import { Post } from "@/components/Post/Post";
 
 export function CardUser() {
   const [user, setUser] = useState<User | null>(null);
+  const [lastPostCreated, setLastPostCreated] = useState<PostProps | null>(
+    null
+  );
 
   useEffect(() => {
     checkUserConnected();
@@ -23,11 +27,20 @@ export function CardUser() {
   }
 
   return (
-    <div className="flex flex-row gap-5 p-3 bg-white rounded-sm">
-      {user ? (
-        <ConnectedUser user={user} />
-      ) : (
-        <DisconnectedUser setUser={setUser} />
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-row gap-5 p-3 bg-white rounded-sm">
+        {user ? (
+          <ConnectedUser user={user} createdPost={setLastPostCreated} />
+        ) : (
+          <DisconnectedUser setUser={setUser} />
+        )}
+      </div>
+
+      {lastPostCreated && (
+        <div className="flex flex-col gap-1">
+          <p className="text-text-secondary text-xs">Seu último post</p>
+          <Post post={lastPostCreated} />
+        </div>
       )}
     </div>
   );
