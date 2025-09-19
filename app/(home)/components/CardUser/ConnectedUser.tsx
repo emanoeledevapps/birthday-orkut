@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-import { createPost } from "@/app/actions";
+import { createPost, updateProfilePhoto } from "@/app/actions";
 import { Prisma, User } from "@/app/generated/prisma";
 import { Avatar } from "@/components/Avatar/Avatar";
 import { Input } from "@/components/ui/input";
@@ -38,8 +38,9 @@ function PhotoItem({ photo }: PhotoItemProps) {
 interface Props {
   user: User;
   createdPost: (post: PostProps) => void;
+  updateUser: (user: User) => void;
 }
-export function ConnectedUser({ user, createdPost }: Props) {
+export function ConnectedUser({ user, createdPost, updateUser }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [showAddImages, setShowAddImages] = useState(false);
@@ -88,10 +89,30 @@ export function ConnectedUser({ user, createdPost }: Props) {
     setShowAddImages(false);
   }
 
+  async function handleUpdateProfilePhoto(photo: PhotoProps) {
+    const upload = await uploadFile(photo.file);
+
+    if (upload.success) {
+      const update = await updateProfilePhoto({
+        userId: user.id,
+        profilePhotoUrl: upload.url,
+      });
+
+      if (update.success) {
+        toast.success("Foto de perfil atualizada com sucesso!");
+        if (update.user) updateUser(update.user);
+      } else {
+        toast.error("Algo deu errado, tente novamente!");
+      }
+    } else {
+      toast.error("Algo deu errado, tente novamente!");
+    }
+  }
+
   return (
     <div className="flex flex-col gap-3 w-full">
       <div className="w-full flex flex-col gap-2">
-        <p className="text-text-secondary text-sm">
+        <p className="text-text-secondary text-xs">
           Você está conectado(a) como
         </p>
 
@@ -99,6 +120,7 @@ export function ConnectedUser({ user, createdPost }: Props) {
           <Avatar
             name={user.name}
             imageUrl={user?.profilePhoto ? user?.profilePhoto : ""}
+            size={70}
           />
 
           <div className="flex flex-col gap-1">
@@ -106,10 +128,13 @@ export function ConnectedUser({ user, createdPost }: Props) {
               {user.name}
             </p>
 
-            {/* <div className="flex items-center gap-5">
-              <Button className="text-xs">Seus depoimentos</Button>
-              <Button className="text-xs">Atualizar foto</Button>
-            </div> */}
+            <div className="flex items-center gap-5">
+              <AddPhoto onChangePhoto={handleUpdateProfilePhoto}>
+                <div className="flex items-center justify-center gap-1 bg-blue-primary w-32 h-8 rounded-sm">
+                  <p className="text-xs text-white">Atualizar foto</p>
+                </div>
+              </AddPhoto>
+            </div>
           </div>
         </div>
       </div>

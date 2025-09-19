@@ -147,3 +147,39 @@ export async function getPosts({ page }: GetPostsProps): Promise<ReturnGetPostPr
     }
   }
 }
+
+interface UpdateProfilePhotoProps {
+  userId: string;
+  profilePhotoUrl: string;
+}
+interface ReturnUpdateProfilePhotoProps {
+  success: boolean
+  user?: User
+}
+export async function updateProfilePhoto(
+  {
+    userId, profilePhotoUrl
+  }: UpdateProfilePhotoProps):
+  Promise<ReturnUpdateProfilePhotoProps> {
+
+  try {
+    const response = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        profilePhoto: profilePhotoUrl
+      }
+    })
+
+    return {
+      success: true,
+      user: response
+    }
+  } catch (e) {
+    console.log(e);
+    return {
+      success: false
+    }
+  }
+}

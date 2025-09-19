@@ -29,11 +29,20 @@ export function CardUser() {
     }
   }
 
+  async function saveUser(user: User) {
+    await localStorage.setItem("user-connected", JSON.stringify(user));
+    setUser(user);
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row gap-5 p-3 bg-white rounded-sm">
         {user ? (
-          <ConnectedUser user={user} createdPost={setLastPostCreated} />
+          <ConnectedUser
+            user={user}
+            createdPost={setLastPostCreated}
+            updateUser={saveUser}
+          />
         ) : (
           <DisconnectedUser setUser={setUser} />
         )}
