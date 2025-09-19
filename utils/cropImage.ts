@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Area } from "react-easy-crop"
 
 export const createImage = (url: string): Promise<CanvasImageSource> =>
@@ -48,7 +49,9 @@ export default async function getCroppedImg(
 
   // calculate bounding box of the rotated image
   const { width: bBoxWidth, height: bBoxHeight } = rotateSize(
+    //@ts-ignore
     image.width,
+    //@ts-ignore
     image.height,
     rotation
   )
@@ -61,6 +64,7 @@ export default async function getCroppedImg(
   ctx.translate(bBoxWidth / 2, bBoxHeight / 2)
   ctx.rotate(rotRad)
   ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1)
+  //@ts-ignore
   ctx.translate(-image.width / 2, - image.height / 2)
 
   // draw rotated image

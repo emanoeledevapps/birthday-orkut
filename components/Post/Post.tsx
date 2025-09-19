@@ -2,6 +2,7 @@
 import { Post as PostProps } from "@/app/generated/prisma";
 import { Avatar } from "@/components/Avatar/Avatar";
 import { useTimeSince } from "@/hooks/useTimeSince";
+import Image from "next/image";
 
 interface Props {
   post: PostProps;
@@ -30,6 +31,17 @@ export function Post({ post }: Props) {
         </div>
       </div>
       <p className="text-black">{post.message}</p>
+      {/* @ts-ignore */}
+      {post?.photos?.length > 0 && (
+        <Image
+          width={300}
+          height={300}
+          className="w-full h-[300px] object-cover"
+          //@ts-ignore
+          src={post?.photos?.[0]?.url}
+          alt="photo item"
+        />
+      )}
     </div>
   );
 }
