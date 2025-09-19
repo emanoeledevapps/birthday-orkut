@@ -43,10 +43,12 @@ export function CropPhoto({
         0
       );
 
-      photoCropped({
-        file: croppedImage.blob,
-        preview: croppedImage.url,
-      });
+      if (croppedImage) {
+        photoCropped({
+          file: croppedImage.blob,
+          preview: croppedImage.url,
+        });
+      }
     } catch (e) {
       console.error(e);
     }

@@ -35,7 +35,7 @@ export default async function getCroppedImg(
   pixelCrop: Area,
   rotation = 0,
   flip = { horizontal: false, vertical: false }
-) {
+): Promise<{ url: string; blob: Blob } | null> {
   const image = await createImage(imageSrc)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
@@ -61,7 +61,7 @@ export default async function getCroppedImg(
   ctx.translate(bBoxWidth / 2, bBoxHeight / 2)
   ctx.rotate(rotRad)
   ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1)
-  ctx.translate(-image.width / 2, -image.height / 2)
+  ctx.translate(-image.width / 2, - image.height / 2)
 
   // draw rotated image
   ctx.drawImage(image, 0, 0)

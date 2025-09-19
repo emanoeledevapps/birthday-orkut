@@ -53,21 +53,26 @@ export async function createUser({ id, name }: CreateUserProps): Promise<ReturnC
 interface CreatePostProps {
   userId: string;
   message: string;
+  photos: { url: string }[]
 }
 interface ReturnCreatePostProps {
   success: boolean;
   post?: Post;
   message?: string;
 }
-export async function createPost({ message, userId }: CreatePostProps): Promise<ReturnCreatePostProps> {
+export async function createPost({ message, userId, photos }: CreatePostProps): Promise<ReturnCreatePostProps> {
   try {
     const response = await prisma.post.create({
       data: {
         message,
-        userId
+        userId,
+        photos: {
+          create: photos
+        }
       },
       include: {
-        user: true
+        user: true,
+        photos: true
       }
     });
 
@@ -108,7 +113,8 @@ export async function getPosts({ page }: GetPostsProps): Promise<ReturnGetPostPr
         createdAt: 'desc'
       },
       include: {
-        user: true
+        user: true,
+        photos: true
       }
     });
 

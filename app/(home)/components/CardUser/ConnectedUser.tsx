@@ -13,13 +13,14 @@ import { Label } from "@/components/ui/label";
 import { GrGallery } from "react-icons/gr";
 import { AddPhoto, PhotoProps } from "@/components/AddPhoto/AddPhoto";
 import Image from "next/image";
+import { uploadFile } from "@/sevices/uploadFile";
 
 interface PhotoItemProps {
   photo: PhotoProps;
 }
 function PhotoItem({ photo }: PhotoItemProps) {
   return (
-    <div className="flex">
+    <div className="flex min-w-20">
       <Image
         width={50}
         height={50}
@@ -43,9 +44,25 @@ export function ConnectedUser({ user, createdPost }: Props) {
 
   async function handlePost() {
     setIsLoading(true);
+
+    const photos: { url: string }[] = [];
+
+    if (photosToUpload.length > 0) {
+      for (let i = 0; i < photosToUpload.length; i++) {
+        const photo = photosToUpload[i];
+        const url = await uploadFile(photo.file);
+        if (url.success) {
+          photos.push({
+            url: url.url,
+          });
+        }
+      }
+    }
+
     const response = await createPost({
       userId: user.id,
       message,
+      photos,
     });
 
     if (response.success) {
@@ -105,7 +122,7 @@ export function ConnectedUser({ user, createdPost }: Props) {
         </button>
 
         {showAddImages && (
-          <div className="flex gap-3 mt-3">
+          <div className="flex gap-3 mt-3 overflow-x-scroll">
             {photosToUpload.map((item) => (
               <PhotoItem key={item.preview} photo={item} />
             ))}
