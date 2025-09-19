@@ -3,9 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-import { Post as PostProps } from "@/app/generated/prisma";
+import { Prisma } from "@/app/generated/prisma";
 import { getPosts } from "@/app/actions";
 import { Post } from "@/components/Post/Post";
+
+type PostProps = Prisma.PostGetPayload<{
+  include: { user: true; photos: true };
+}>;
 
 export function Feed() {
   const [posts, setPosts] = useState<PostProps[]>([]);

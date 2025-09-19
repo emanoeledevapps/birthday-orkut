@@ -1,7 +1,11 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { Post, User } from "./generated/prisma";
+import { Prisma, User } from "./generated/prisma";
+
+type PostProps = Prisma.PostGetPayload<{
+  include: { user: true; photos: true };
+}>;
 
 interface CheckUserExistsProps {
   id: string;
@@ -57,7 +61,7 @@ interface CreatePostProps {
 }
 interface ReturnCreatePostProps {
   success: boolean;
-  post?: Post;
+  post?: PostProps;
   message?: string;
 }
 export async function createPost({ message, userId, photos }: CreatePostProps): Promise<ReturnCreatePostProps> {
@@ -93,7 +97,7 @@ interface GetPostsProps {
 }
 interface ReturnGetPostProps {
   success: boolean;
-  posts: Post[];
+  posts: PostProps[];
   message?: string;
   meta: {
     current_page: number;

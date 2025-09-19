@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { ConnectedUser } from "./ConnectedUser";
 import { DisconnectedUser } from "./DisconnectedUser";
-import { Post as PostProps, User } from "@/app/generated/prisma";
+import { Prisma, User } from "@/app/generated/prisma";
 import { Post } from "@/components/Post/Post";
 
+type PostProps = Prisma.PostGetPayload<{
+  include: { user: true; photos: true };
+}>;
 export function CardUser() {
   const [user, setUser] = useState<User | null>(null);
   const [lastPostCreated, setLastPostCreated] = useState<PostProps | null>(

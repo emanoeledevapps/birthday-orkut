@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { createPost } from "@/app/actions";
-import { Post, User } from "@/app/generated/prisma";
+import { Prisma, User } from "@/app/generated/prisma";
 import { Avatar } from "@/components/Avatar/Avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,10 @@ import { GrGallery } from "react-icons/gr";
 import { AddPhoto, PhotoProps } from "@/components/AddPhoto/AddPhoto";
 import Image from "next/image";
 import { uploadFile } from "@/sevices/uploadFile";
+
+type PostProps = Prisma.PostGetPayload<{
+  include: { user: true; photos: true };
+}>;
 
 interface PhotoItemProps {
   photo: PhotoProps;
@@ -33,7 +37,7 @@ function PhotoItem({ photo }: PhotoItemProps) {
 
 interface Props {
   user: User;
-  createdPost: (post: Post) => void;
+  createdPost: (post: PostProps) => void;
 }
 export function ConnectedUser({ user, createdPost }: Props) {
   const [isLoading, setIsLoading] = useState(false);
