@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createUser } from "@/app/actions";
 import { User } from "@/app/generated/prisma";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface Props {
   setUser: (user: User) => void;
@@ -26,10 +27,12 @@ export function DisconnectedUser({ setUser }: Props) {
   const accessCode = useMemo(() => randomUUID().toUpperCase(), []);
 
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function teste() {
     if (!name.trim()) return;
 
+    setIsLoading(true);
     const response = await createUser({
       id: accessCode,
       name,
@@ -44,6 +47,7 @@ export function DisconnectedUser({ setUser }: Props) {
         setUser(response.user);
       }
     }
+    setIsLoading(false);
   }
 
   return (
@@ -94,8 +98,19 @@ export function DisconnectedUser({ setUser }: Props) {
             />
           </div>
 
-          <Button className="mt-5" onClick={teste}>
-            Continuar
+          <Button
+            className="mt-5 hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
+            onClick={teste}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <AiOutlineLoading3Quarters
+                className="animate-spin text-white"
+                size={20}
+              />
+            ) : (
+              "Continuar"
+            )}
           </Button>
         </div>
       </DialogContent>

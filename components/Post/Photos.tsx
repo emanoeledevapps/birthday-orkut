@@ -27,8 +27,8 @@ export function Photos({ photos }: Props) {
               />
 
               {photos.length > 1 && (
-                <div className="absolute top-2 right-2 bg-gray-200 py-1 px-5 rounded-full">
-                  <p className="font-semibold">
+                <div className="absolute top-2 right-2 bg-gray-200 py-1 px-2 rounded-full">
+                  <p className="font-semibold text-xs">
                     {index + 1}/{photos.length}
                   </p>
                 </div>

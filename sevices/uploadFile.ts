@@ -14,7 +14,7 @@ export async function uploadFile(file: Blob | File): Promise<ReturnProps> {
     const json = await response.json()
     return {
       success: true,
-      url: `${process.env.NEXT_PUBLIC_STORAGE_API_URL}/files/${json.fileName}`
+      url: json?.url
     }
   } catch (e) {
     console.log(e)
