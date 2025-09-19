@@ -109,9 +109,20 @@ export function ConnectedUser({ user, createdPost, updateUser }: Props) {
     }
   }
 
+  function handleCopyId() {
+    navigator?.clipboard?.writeText(user.id);
+    toast.success("Seu ID de acesso foi copiado para a área de transferência");
+  }
+
   return (
     <div className="flex flex-col gap-3 w-full">
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2 relative">
+        <p
+          className="text-xs text-text-secondary absolute top-0 right-0"
+          onClick={handleCopyId}
+        >
+          ID: {user.id}
+        </p>
         <p className="text-text-secondary text-xs">
           Você está conectado(a) como
         </p>
@@ -141,7 +152,8 @@ export function ConnectedUser({ user, createdPost, updateUser }: Props) {
 
       <div className="flex flex-col w-full">
         <Label className="text-text-secondary text-xs" htmlFor="message">
-          Deixe aqui sua depoimento, ou poste seu momento
+          💿 Aqui é tipo depoimento do Orkut: pode escrever seu recado fofo ou
+          postar uma foto ✍️✨
         </Label>
         <Input
           id="message"
