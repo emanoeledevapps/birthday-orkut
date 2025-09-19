@@ -28,7 +28,6 @@ export function CropPhoto({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area>();
-  const [croppedImage, setCroppedImage] = useState(null);
 
   function onCropComplete(_croppedArea: Area, croppedAreaPixels: Area) {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -61,7 +60,7 @@ export function CropPhoto({
           <DialogTitle>Cortar imagem</DialogTitle>
         </DialogHeader>
 
-        <div className="relative flex w-[300px] h-[300px]">
+        <div className="relative flex w-[300px] h-[300px] items-center justify-center">
           <Cropper
             image={imagePreview}
             crop={crop}
@@ -70,6 +69,7 @@ export function CropPhoto({
             onCropChange={setCrop}
             onCropComplete={onCropComplete}
             onZoomChange={setZoom}
+            style={{ cropAreaStyle: { accentColor: "#aaa" } }}
           />
         </div>
 

@@ -7,7 +7,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { createPost } from "@/app/actions";
 import { Post, User } from "@/app/generated/prisma";
 import { Avatar } from "@/components/Avatar/Avatar";
-//import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GrGallery } from "react-icons/gr";
@@ -69,6 +68,7 @@ export function ConnectedUser({ user, createdPost }: Props) {
       setMessage("");
       toast.success("Depoimento publicado com sucesso!");
       if (response.post) createdPost(response.post);
+      handleRemovePhotos();
     } else {
       toast.error("Algo deu errado, tente novamente!");
     }
@@ -77,6 +77,11 @@ export function ConnectedUser({ user, createdPost }: Props) {
 
   function handleAddPhotoToUpload(photo: PhotoProps) {
     setPhotosToUpload((prev) => [...prev, photo]);
+  }
+
+  function handleRemovePhotos() {
+    setPhotosToUpload([]);
+    setShowAddImages(false);
   }
 
   return (
@@ -107,7 +112,7 @@ export function ConnectedUser({ user, createdPost }: Props) {
 
       <div className="flex flex-col w-full">
         <Label className="text-text-secondary text-xs" htmlFor="message">
-          Deixe aqui sua mensagem, ou poste seu momento
+          Deixe aqui sua depoimento, ou poste seu momento
         </Label>
         <Input
           id="message"
@@ -117,26 +122,52 @@ export function ConnectedUser({ user, createdPost }: Props) {
           onChange={(e) => setMessage(e.target.value)}
         />
 
-        <button onClick={() => setShowAddImages(true)} className="mt-3">
-          <GrGallery className="text-blue-primary" size={25} />
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setShowAddImages(true)}
+            className="mt-3 flex items-center gap-2"
+          >
+            <GrGallery className="text-blue-primary" size={25} />
+            {!showAddImages && (
+              <p className="text-xs text-text-secondary">
+                Você também pode postar uma foto aqui
+              </p>
+            )}
+          </button>
+
+          {showAddImages && (
+            <button
+              onClick={handleRemovePhotos}
+              className="text-text-secondary underline text-sm"
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
 
         {showAddImages && (
           <div className="flex gap-3 mt-3 overflow-x-scroll">
             {photosToUpload.map((item) => (
               <PhotoItem key={item.preview} photo={item} />
             ))}
-            <AddPhoto onChangePhoto={handleAddPhotoToUpload}>
-              <div className="w-20 h-20 rounded-sm bg-gray-400 flex flex-col items-center justify-center">
-                <p className="text-xs text-center">Toque para adicionar</p>
-              </div>
-            </AddPhoto>
+
+            {photosToUpload.length <= 4 && (
+              <AddPhoto onChangePhoto={handleAddPhotoToUpload}>
+                <div className="w-20 h-20 rounded-sm bg-gray-200 flex flex-col items-center justify-center">
+                  <p className="text-xs text-center text-text-secondary">
+                    Toque para adicionar
+                  </p>
+                </div>
+              </AddPhoto>
+            )}
           </div>
         )}
         <div className="flex w-full justify-end mt-3">
           <button
             className="h-10 w-24 flex items-center justify-center rounded-sm text-white bg-blue-primary font-semibold hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
-            disabled={isLoading || !message.trim()}
+            disabled={
+              isLoading || (!message.trim() && photosToUpload.length === 0)
+            }
             onClick={handlePost}
           >
             {isLoading ? (
