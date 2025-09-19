@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createUser } from "@/app/actions";
+import { checkUserExists, createUser } from "@/app/actions";
 import { User } from "@/app/generated/prisma";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -28,8 +28,10 @@ export function DisconnectedUser({ setUser }: Props) {
 
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [accessWithCode, setAccessWithCode] = useState(false);
+  const [inputID, setInputID] = useState("");
 
-  async function teste() {
+  async function handleCreateUser() {
     if (!name.trim()) return;
 
     setIsLoading(true);
@@ -48,6 +50,24 @@ export function DisconnectedUser({ setUser }: Props) {
       }
     }
     setIsLoading(false);
+  }
+
+  async function handleAccessWithCode() {
+    if (!inputID.trim()) return;
+
+    setIsLoading(true);
+    const response = await checkUserExists({ id: inputID });
+    if (response.exists) {
+      if (response.user) {
+        localStorage.setItem("user-connected", JSON.stringify(response?.user));
+        setUser(response.user);
+      }
+    }
+    setIsLoading(false);
+  }
+
+  function handleToggleAceessWithCode() {
+    setAccessWithCode((prev) => !prev);
   }
 
   return (
@@ -69,50 +89,102 @@ export function DisconnectedUser({ setUser }: Props) {
         <DialogHeader>
           <DialogTitle>Vamos conectar</DialogTitle>
           <DialogDescription>
-            É bem rápido, precisamos apenas do seu nome
+            {accessWithCode
+              ? "Entre com seu ID de acesso"
+              : "É bem rápido, precisamos apenas do seu nome"}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-5">
-          <div className="grid flex-1">
-            <Label className="text-text-secondary">Seu código de acesso</Label>
-            <p className="font-bold text-3xl text-blue-primary">{accessCode}</p>
-
-            <p className="text-xs">
-              Esse código de acesso será copiada para sua área de transferência
-              caso precise, mas não se preocupe, você ficará conectado nesse
-              dispositivo
-            </p>
-          </div>
-
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="name" className="text-text-secondary">
-              Digite seu nome
-            </Label>
-            <Input
-              id="name"
-              placeholder="Digite aqui"
-              className="bg-white"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <Button
-            className="mt-5 hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
-            onClick={teste}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <AiOutlineLoading3Quarters
-                className="animate-spin text-white"
-                size={20}
+        {accessWithCode ? (
+          <div className="flex flex-col gap-5">
+            <div className="grid flex-1 gap-2">
+              <Label htmlFor="id" className="text-text-secondary">
+                Digite seu ID de acesso
+              </Label>
+              <Input
+                id="id"
+                placeholder="Digite aqui"
+                className="bg-white"
+                value={inputID}
+                onChange={(e) => setInputID(e.target.value)}
               />
-            ) : (
-              "Continuar"
-            )}
-          </Button>
-        </div>
+            </div>
+
+            <p
+              className="text-text-secondary text-sm underline"
+              onClick={handleToggleAceessWithCode}
+            >
+              É novo por aqui, crie seu acesso
+            </p>
+
+            <Button
+              className="mt-5 hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
+              onClick={handleAccessWithCode}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <AiOutlineLoading3Quarters
+                  className="animate-spin text-white"
+                  size={20}
+                />
+              ) : (
+                "Continuar"
+              )}
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-5">
+            <div className="grid flex-1">
+              <Label className="text-text-secondary">
+                Seu código de acesso
+              </Label>
+              <p className="font-bold text-3xl text-blue-primary">
+                {accessCode}
+              </p>
+
+              <p className="text-xs">
+                Esse código de acesso será copiada para sua área de
+                transferência caso precise, mas não se preocupe, você ficará
+                conectado nesse dispositivo
+              </p>
+            </div>
+
+            <div className="grid flex-1 gap-2">
+              <Label htmlFor="name" className="text-text-secondary">
+                Digite seu nome
+              </Label>
+              <Input
+                id="name"
+                placeholder="Digite aqui"
+                className="bg-white"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <p
+              className="text-text-secondary text-sm underline"
+              onClick={handleToggleAceessWithCode}
+            >
+              Entrar com ID de acesso
+            </p>
+
+            <Button
+              className="mt-5 hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
+              onClick={handleCreateUser}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <AiOutlineLoading3Quarters
+                  className="animate-spin text-white"
+                  size={20}
+                />
+              ) : (
+                "Continuar"
+              )}
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

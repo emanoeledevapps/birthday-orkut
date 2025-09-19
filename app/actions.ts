@@ -10,12 +10,19 @@ type PostProps = Prisma.PostGetPayload<{
 interface CheckUserExistsProps {
   id: string;
 }
-export async function checkUserExists({ id }: CheckUserExistsProps): Promise<boolean> {
-  const response = await prisma.user.count({
+interface ReturnCheckUserExistsProps {
+  exists: boolean;
+  user?: User;
+}
+export async function checkUserExists({ id }: CheckUserExistsProps): Promise<ReturnCheckUserExistsProps> {
+  const user = await prisma.user.findUnique({
     where: { id }
   })
 
-  return response > 0
+  return {
+    exists: user ? true : false,
+    user: user ? user : undefined
+  }
 }
 
 interface CreateUserProps {
