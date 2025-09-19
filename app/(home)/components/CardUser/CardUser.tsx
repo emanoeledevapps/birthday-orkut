@@ -20,7 +20,7 @@ export function CardUser() {
   }, []);
 
   async function checkUserConnected() {
-    const response = await localStorage.getItem("user-connected");
+    const response = await localStorage.getItem("user-connected-1");
 
     if (response) {
       setUser(JSON.parse(response) as User);
@@ -30,7 +30,7 @@ export function CardUser() {
   }
 
   async function saveUser(user: User) {
-    await localStorage.setItem("user-connected", JSON.stringify(user));
+    await localStorage.setItem("user-connected-1", JSON.stringify(user));
     setUser(user);
   }
 

@@ -45,7 +45,10 @@ export function DisconnectedUser({ setUser }: Props) {
         navigator?.clipboard?.writeText(accessCode);
       }
       if (response.user) {
-        localStorage.setItem("user-connected", JSON.stringify(response?.user));
+        localStorage.setItem(
+          "user-connected-1",
+          JSON.stringify(response?.user)
+        );
         setUser(response.user);
       }
     }
@@ -59,7 +62,10 @@ export function DisconnectedUser({ setUser }: Props) {
     const response = await checkUserExists({ id: inputID });
     if (response.exists) {
       if (response.user) {
-        localStorage.setItem("user-connected", JSON.stringify(response?.user));
+        localStorage.setItem(
+          "user-connected-1",
+          JSON.stringify(response?.user)
+        );
         setUser(response.user);
       }
     }
